@@ -1,0 +1,23 @@
+#my:
+#  name: test
+#  address: China
+#  favorites:
+#    - 足球
+#    - 篮球
+#    - 羽毛球
+
+
+userlist:
+  users:
+    - name: Tom
+      address: China
+      favorites:
+        - 足球
+        - 篮球
+        - 羽毛球
+    - name: Jim
+      address: Japan
+      favorites:
+        - 唱
+        - 跳
+        - rap
