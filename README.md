@@ -50,3 +50,16 @@ my:
 ```
 
 在声明了读取"my"属性之后，*user*的*name*与*address*两个属性就会被赋值
+
+
+
+### 更改配置文件方案
+
+> 在主配置文件 *application.properties* 当中指明使用哪一套配置文件
+
+```properties
+spring.profiles.active=dev
+```
+
+文件夹下有 *application-dev.properties* 以及 *application-prod.properties* 两套配置文件，如果使用上述语句，则使用 *application-dev.properties* 来进行项目配置
+
