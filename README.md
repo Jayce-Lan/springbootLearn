@@ -63,3 +63,12 @@ spring.profiles.active=dev
 
 文件夹下有 *application-dev.properties* 以及 *application-prod.properties* 两套配置文件，如果使用上述语句，则使用 *application-dev.properties* 来进行项目配置
 
+
+
+## springbootView
+
+> 整合视图层
+
+- thymeleaf
+
+- freemarker
