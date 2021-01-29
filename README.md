@@ -307,6 +307,7 @@ public class MyWebConfig implements WebMvcConfigurer {
 
 
 
-### Tomcat在win10中的位置
+### @ControllerAdvice
 
-C:\Users\Administrator\AppData\Local\Temp\
+> Controller的增强版，常用于处理全局数据，一般搭配@ExceptionHandler、@ModelAttribute以及@InitBinder使用
+
