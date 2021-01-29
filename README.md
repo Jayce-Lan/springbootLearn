@@ -79,6 +79,33 @@ spring.profiles.active=dev
 
 > spring boot 整合web开发
 
+
+
+### 重要文件目录
+
+main/java
+
+- com.example.config【存储工具类】
+  - `GsonConfig.java`----------【Gson字符串的实现工具类】
+  - `MyFastJsonConfig.java`----------【FastJson字符串的实现工具类】
+  - `MyWebConfig.java`----------【读取静态资源的工具类】
+- com.example.controller【存储web层接口】
+  - `BookController.java`----------【读取Json数据的web接口】
+  - `FileUploadController.java`----------【实现文件上传的接口】
+- com.example.pojo【存储实体类】
+- `SpringbootWebApplication.java`----------【项目启动类】
+
+main/resources
+
+- static【存放测试静态资源】
+  - `img.jpg`----------【用于测试的图片】
+  - `upload.html`----------【单个文件上传的网页】
+  - `uploadfiles.html`----------【多个文件上传的网页】
+- templates
+- `application.properties`----------【配置文件】
+
+
+
 ### 返回JSON数据
 
 #### 默认转换
@@ -240,3 +267,46 @@ public class MyFastJsonConfig {
 server.servlet.encoding.force-request=true
 ```
 
+
+
+### 静态资源访问
+
+在配置文件中配置静态资源访问
+
+```properties
+spring.mvc.static-path-pattern=/static/**
+spring.web.resources.static-locations=classpath:/static/
+```
+
+创建Java类进行访问
+
+```java
+package com.example.config;
+
+import ...
+
+@Configuration
+public class MyWebConfig implements WebMvcConfigurer {
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("classpath:/static/");
+    }
+}
+```
+
+
+
+以上两种方式均可以实现访问，在加载后，只需要访问 "http://localhost:8080/static/img.jpg" ，即可访问 *static* 目录下的 *img.jpg*
+
+
+
+### 文件上传
+
+在 *spring-boot-starter-web* 中已经有默认的单文件上传的依赖
+
+
+
+### Tomcat在win10中的位置
+
+C:\Users\Administrator\AppData\Local\Temp\
