@@ -311,3 +311,41 @@ public class MyWebConfig implements WebMvcConfigurer {
 
 > Controller的增强版，常用于处理全局数据，一般搭配@ExceptionHandler、@ModelAttribute以及@InitBinder使用
 
+
+
+#### 全局异常处理
+
+与`@ExceptionHandler` 搭配使用，可以进行全局异常处理
+
+> 实例
+
+```java
+@ControllerAdvice
+public class CustomExceptionHandler {
+    @ExceptionHandler(IOException.class)
+    public ModelAndView uploadException(IOException e) throws IOException {
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("msg", "上传文件大小超出限制！");
+        mav.setViewName("error");
+
+        return mav;
+    }
+}
+```
+
+
+
+#### 添加全局数据
+
+与`@ModelAttribute` 搭配使用可以添加全局数据
+
+
+
+#### 请求参数预处理
+
+与`@ModelAttribute` 以及`@InitBinder` 搭配使用，可以进行参数的预处理
+
+
+
+### 自定义错误页
+
