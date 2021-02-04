@@ -360,3 +360,93 @@ public class CustomExceptionHandler {
 #### 动态错误页
 
 由于在 `static` 中定义的错误页为静态页面，因此我们可以导入*thymeleaf*，使得错误页灵活展现
+
+
+
+### 继承DefaultErrorAttributes的类
+
+```java
+@Component
+public class MyErrorAttribute extends DefaultErrorAttributes {
+    @Override
+    public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options) {
+        Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, options);
+
+        errorAttributes.put("custommsg", "出错了！");
+        errorAttributes.remove("error");
+
+        return errorAttributes;
+    }
+}
+```
+
+
+
+## springbootCORS
+
+> *CORS*是W3C制定的一种跨域资源共享标准，目的是解决前端跨域请求
+
+如下面的*controller*类
+
+```java
+@RestController
+@RequestMapping("/book")
+public class BookController {
+    @PostMapping("/")
+    public String addBook(String name) {
+        return "receive:" + name;
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteBook(@PathVariable int id) {
+        return String.valueOf(id);
+    }
+}
+```
+
+该类中提供了添加和删除两个接口
+
+通常情况下，跨域传输有两个地方可以配置
+
+
+
+### 注解配置
+
+**@CrossOrigin**
+
+value：表示支持的域
+
+maxAge：请求的有效期，默认属性1800秒，请求发起后探测请求不需要每次都发送
+
+allowedHeaders：请求头，"*"表示所有请求头都会被允许
+
+```java
+@PostMapping("/")
+@CrossOrigin(value = "http://localhost:8081", maxAge = 1800, allowedHeaders = "*")
+public String addBook(String name) {
+    return "receive:" + name;
+}
+```
+
+注解配置可以精确控制到方法
+
+
+
+### 全局配置
+
+全局配置需要实现 `WebMvcConfigurer` 接口
+
+```java
+@Configuration
+public class MyWebMvcConfig implements WebMvcConfigurer {
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/book/**")
+                .allowedHeaders("*")
+                .allowedMethods("*")
+                .maxAge(1800)
+                .allowedOrigins("http://localhost:8081");
+    }
+}
+```
+
