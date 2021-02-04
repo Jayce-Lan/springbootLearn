@@ -347,5 +347,16 @@ public class CustomExceptionHandler {
 
 
 
+## springbootError
+
 ### 自定义错误页
 
+#### 4xx与5xx页面
+
+类似于404/500等的页面，我们只需要在`static` 文件夹下放入一个 `error` 文件夹，并且在其内部写入对应参数的html页面即可
+
+
+
+#### 动态错误页
+
+由于在 `static` 中定义的错误页为静态页面，因此我们可以导入*thymeleaf*，使得错误页灵活展现
