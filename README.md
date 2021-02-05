@@ -612,7 +612,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 ### 整合 *Servlet* 、*Filter* 和 *Listener*
 
-配置完成三个工具类之后，需要在启动类中加入注解`@ServletComponentScan`
+> 配置完成三个工具类之后，需要在启动类中加入注解`@ServletComponentScan`
 
 ```java
 @SpringBootApplication
@@ -624,5 +624,37 @@ public class SpringbootWeb2Application {
 	}
 
 }
+```
+
+
+
+### 映射路径
+
+> 一些页面不需要加载数据，只是完成简单的跳转，对于这种路径，可以直接配置路径映射，提高访问速度
+
+```java
+@Configuration
+public class WebMvcConfig implements WebMvcConfigurer {
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/index").setViewName("index");
+    }
+}
+```
+
+如上，映射了两个文件路径，可以通过直接访问 localhost:8080/index 或者 localhost:8080/login 直接访问到这两个页面
+
+
+
+### 配置AOP
+
+Spring Boot的AOP需要导入依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-aop</artifactId>
+</dependency>
 ```
 
