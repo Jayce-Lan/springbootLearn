@@ -450,3 +450,65 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
 }
 ```
 
+
+
+## springbootConfigure
+
+### 配置类与XML配置
+
+> Spring Boot 推荐使用Java来完成相关的配置工作。在项目中，不建议将所有的配置都放在一个配置类中
+
+#### 如需使用*xml*进行配置，那么需要以下三步：
+
+##### 定义一个类并且写入这个类的方法
+
+```java
+public class Hello {
+    public String sayHello(String name) {
+        return "Hello," + name;
+    }
+}
+```
+
+
+
+##### 配置bean文件，将定义的类注册进入IoC容器
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="hello" class="com.example.hello.Hello"/>
+</beans>
+```
+
+
+
+##### 定义一个配置类Beans，将配置文件引入
+
+```java
+@Configuration
+@ImportResource("classpath:beans.xml")  //导入资源
+public class Beans {
+}
+```
+
+
+
+在完成上述三步之后，Hello类就可以在Spring容器中被使用
+
+```java
+@RestController
+public class HelloController {
+    @Autowired
+    Hello hello;
+
+    @GetMapping("/hello")
+    public String hello() {
+        return hello.sayHello("Jayce");
+    }
+}
+```
+
