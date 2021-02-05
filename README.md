@@ -454,6 +454,30 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
 
 ## springbootConfigure
 
+### 项目主要目录
+
+main/java
+
+- com.example.config【存储工具类】
+  - `Beans.java`----------【读取配置文件的类】
+  - `WebMvcConfig.java`----------【拦截器设置类】
+- com.example.controller【存储web层接口】
+  - `HelloController.java`----------【Hello类的web接口】
+- com.example.hello
+  - `hello.java`----------【一个被注册进入容器的工具类】
+- com.example.handler
+  - `MyInterceptor1.java`----------【拦截器，实现HandlerInterceptor接口】
+- `SpringbootConfigureApplication.java`----------【项目启动类】
+
+main/resources
+
+- static【存放测试静态资源】
+- templates
+- `application.properties`----------【配置文件】
+- `beans.xml`----------【Spring配置文件】
+
+
+
 ### 配置类与XML配置
 
 > Spring Boot 推荐使用Java来完成相关的配置工作。在项目中，不建议将所有的配置都放在一个配置类中
@@ -495,6 +519,8 @@ public class Beans {
 }
 ```
 
+如果省略该步骤，则会出现Spring无法加载bean，那么，Hello类也就无法被加载使用
+
 
 
 在完成上述三步之后，Hello类就可以在Spring容器中被使用
@@ -512,3 +538,70 @@ public class HelloController {
 }
 ```
 
+
+
+### 注册拦截器
+
+拦截器中的方法按照 *preHandle* >>> *Controller* >>> *postHandle* >>> *afterCompletion* 的顺序执行
+
+> 注意事项
+
+- 只有*preHandle* 的方法返回值为 true 才会执行下面的方法
+- 当存在多个拦截器链时，*postHandle* 才会执行，该方法只有拦截器链内的所有拦截器返回成功才会调用
+- *afterCompletion* 只有 *preHandle* 返回 true 才会被调用，拦截器链内的任意 *preHandle* 返回 false ，后面的方法都不会被执行
+
+
+
+#### 拦截器主要步骤
+
+##### 定义一个实现 *HandlerInterceptor* 接口的拦截器类
+
+> 该类主要写明拦截器在每个步骤中需要做的事情/方法
+
+```java
+public class MyInterceptor1 implements HandlerInterceptor {
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        System.out.println("MyInterceptor1 >>> preHandle");
+        return true;
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        System.out.println("MyInterceptor1 >>> postHandle");
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        System.out.println("MyInterceptor1 >>> afterCompletion");
+    }
+}
+```
+
+
+
+##### 定义一个实现 *WebMvcConfigurer* 接口的拦截器工具类
+
+> 该类定义拦截器拦截的内容
+
+```java
+@Configuration
+public class WebMvcConfig implements WebMvcConfigurer {
+    /**
+     * addPathPatterns表示拦截路径
+     * excludePathPatterns表示排除的路径
+     *
+     * @param registry 被拦截的内容
+     */
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new MyInterceptor1())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/hello");
+    }
+}
+```
+
+
+
+完成以上配置之后，整个项目中除了 /hello 这个路径下的所有路径，被访问时都会被拦截器拦截
