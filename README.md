@@ -605,3 +605,24 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 
 完成以上配置之后，整个项目中除了 /hello 这个路径下的所有路径，被访问时都会被拦截器拦截
+
+
+
+## springbootWeb2
+
+### 整合 *Servlet* 、*Filter* 和 *Listener*
+
+配置完成三个工具类之后，需要在启动类中加入注解`@ServletComponentScan`
+
+```java
+@SpringBootApplication
+@ServletComponentScan
+public class SpringbootWeb2Application {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SpringbootWeb2Application.class, args);
+	}
+
+}
+```
+
