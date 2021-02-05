@@ -730,3 +730,48 @@ public class LogAspect {
 }
 ```
 
+
+
+### 自定义首页
+
+> 如果在静态资源下定义好了 *index.html* 或者使用动态模板定义了 *index.html* 那么，我们可以直接写入以下接口，之后我们访问路径 localhost:8080 就会跳转到我们的 *index.html* 页面中
+
+```java
+@RestController
+public class HelloController {
+    @RequestMapping("/index")
+    public String hello() {
+        return "index";
+    }
+}
+```
+
+
+
+### 去除自动化配置
+
+> 在 Spring Boot 中存在着很多自动化配置，如果我们不需要，想要取消，则可以使用注解或者配置文件的方式
+
+#### 使用注解
+
+```java
+@SpringBootApplication
+//去除 ErrorMvcAutoConfiguration 的自动化配置
+@EnableAutoConfiguration(exclude = {ErrorMvcAutoConfiguration.class})
+public class SpringbootWeb2Application {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SpringbootWeb2Application.class, args);
+	}
+
+}
+```
+
+
+
+#### 使用配置文件
+
+```properties
+spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
+```
+
