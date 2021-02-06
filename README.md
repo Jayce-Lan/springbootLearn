@@ -775,3 +775,82 @@ public class SpringbootWeb2Application {
 spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
 ```
 
+
+
+## springbootJDBCTemplate
+
+> JDBCTemplate 是 Spring Boot 提供的一套 JDBC 模板
+
+### 导入相关依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jdbc</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>8.0.22</version>
+</dependency>
+
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>druid</artifactId>
+    <version>1.1.21</version>
+</dependency>
+</dependencies>
+```
+
+*spring-boot-starter-jdbc* 提供了 spring-jdbc ，另外还加入了数据库驱动依赖和数据库连接池依赖
+
+### 实现JDBCTemplate的步骤
+
+#### 在配置文件中写入数据库相关属性
+
+```properties
+# 数据库基本信息
+spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
+spring.datasource.url=jdbc:mysql://localhost:3306/springbootlearn?useSSL=false&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=root
+```
+
+
+
+#### 在 Dao 层引入 *JdbcTemplate* 
+
+```java
+@Repository
+public class BookDao {
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
+    public int addBook(Book book) {
+        return jdbcTemplate.update("INSERT INTO book(name, author) VALUES (?, ?)",
+                book.getName(), book.getAuthor());
+    }
+
+    public int updateBook(Book book) {
+        return jdbcTemplate.update("UPDATE book SET name = ?, author = ? WHERE id = ?",
+                book.getName(), book.getAuthor(), book.getId());
+    }
+
+    public int deleteBookById(Integer id) {
+        return jdbcTemplate.update("DELETE FROM book WHERE id = ?", id);
+    }
+
+    public Book getBookById(Integer id) {
+        return jdbcTemplate.queryForObject("select * from book where id = ?",
+                new BeanPropertyRowMapper<>(Book.class), id);
+    }
+
+    public List<Book> getAllBooks() {
+        return jdbcTemplate.query("select * from book",
+                new BeanPropertyRowMapper<>(Book.class));
+    }
+}
+```
+
+值得注意的是，在Dao层的文件中，抬头需要写入`@Repository` 注解
