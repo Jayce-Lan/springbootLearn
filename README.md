@@ -854,3 +854,84 @@ public class BookDao {
 ```
 
 值得注意的是，在Dao层的文件中，抬头需要写入`@Repository` 注解
+
+
+
+## springbootMyBatis
+
+> Spring Boot 整合 MyBatis
+
+### 具体步骤
+
+#### 导入相关依赖
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.mybatis.spring.boot</groupId>
+        <artifactId>mybatis-spring-boot-starter</artifactId>
+        <version>2.1.4</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>druid</artifactId>
+        <version>1.1.21</version>
+    </dependency>
+
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.22</version>
+    </dependency>
+</dependencies>
+```
+
+
+
+#### 配置 `Mapper.xml` 文件映射
+
+```xml
+<build>
+    <!-- 配置 mapper 的映射 -->
+    <resources>
+        <resource>
+            <directory>src/main/java</directory>
+            <includes>
+                <include>**/*.xml</include>
+            </includes>
+        </resource>
+        <resource>
+            <directory>src/main/resources</directory>
+        </resource>
+    </resources>
+</build>
+```
+
+
+
+#### 配置文件配置数据库参数
+
+```properties
+spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
+spring.datasource.url=jdbc:mysql://localhost:3306/springbootlearn?useSSL=false&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=root
+```
+
+
+
+#### dao 层加入注解
+
+```java
+@Repository
+@Mapper
+public interface BookMapper {
+    int addBook(Book book);
+    int deleteBookById(Integer id);
+    int updateBook(Book book);
+    Book getBookById(Integer id);
+    List<Book> getAllBook();
+}
+```
+
