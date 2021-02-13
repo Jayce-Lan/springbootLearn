@@ -935,3 +935,90 @@ public interface BookMapper {
 }
 ```
 
+
+
+## springbootDataJPA
+
+> Spring Boot 整合 JPA
+
+- JPA 相当于 Hibernate 的一个子集
+- Spring Data 是 Spring 的一个子项目
+- Spring Data 不仅支持关系型数据库，也支持非关系型数据库
+- Spring Data JPA 可以有效简化关系型数据库的访问代码
+
+
+
+### 整合步骤
+
+#### 创建数据库
+
+```mysql
+create database jpademo01;
+```
+
+> 只需要创建数据库，而不需要创建数据表
+
+
+
+#### 导入依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>druid</artifactId>
+    <version>1.1.21</version>
+</dependency>
+
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>8.0.22</version>
+</dependency>
+```
+
+
+
+#### 数据库配置
+
+```properties
+spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
+spring.datasource.url=jdbc:mysql://localhost:3306/jpademo01?useSSL=false&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=root
+#是否在控制台打印JPA生成的SQL
+spring.jpa.show-sql=true
+#JPA对应的数据库
+spring.jpa.database=mysql
+#项目启动时根据实体类更新数据库中的表
+spring.jpa.hibernate.ddl-auto=update
+#数据库方言
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL57Dialect
+```
+
+
+
+#### 实体类的配置
+
+```java
+//该注解表示该类为一个实体类，启动项目时会自动生成一张表，表的名称为注解中的"name"的值，如果不设定，那表明即为实体类名
+@Entity(name = "t_book")
+public class Book {
+    @Id //说明该属性为表的主键
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //主键自动生成
+    private Integer id;
+    @Column(nullable = false)   //定制属性，注解中的 name 可以设置对应数据库表的名称，不设置则为默认属性，nullable 表示字段非空
+    private String name;
+    private String author;
+    private Float price;
+    @Transient  //表示建表时忽略该属性
+    private String description;
+    
+    //Getter and Setter
+}
+```
+
