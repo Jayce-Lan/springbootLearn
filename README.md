@@ -1022,3 +1022,87 @@ public class Book {
 }
 ```
 
+
+
+
+
+## moreDataSourceJDBC
+
+> 整合 Spring Boot 中 JDBC Template 的多数据源
+
+### 多数据源整合步骤
+
+#### 导入依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jdbc</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>druid-spring-boot-starter</artifactId>
+    <version>1.2.3</version>
+</dependency>
+
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>8.0.22</version>
+</dependency>
+```
+
+
+
+#### 配置文件
+
+```properties
+spring.datasource.one.type=com.alibaba.druid.pool.DruidDataSource
+spring.datasource.one.username=root
+spring.datasource.one.password=root
+spring.datasource.one.url=jdbc:mysql://localhost:3306/demo01_1?useSSL=false&serverTimezone=UTC
+
+
+spring.datasource.two.type=com.alibaba.druid.pool.DruidDataSource
+spring.datasource.two.username=root
+spring.datasource.two.password=root
+spring.datasource.two.url=jdbc:mysql://localhost:3306/demo01_2?useSSL=false&serverTimezone=UTC
+```
+
+
+
+#### 配置数据源工具类
+
+```java
+@Configuration
+public class DataSourceConfig {
+    @Bean
+    @ConfigurationProperties("spring.datasource.one")
+    DataSource dsOne() {
+        return DruidDataSourceBuilder.create().build();
+    }
+
+    @Bean
+    @ConfigurationProperties("spring.datasource.two")
+    DataSource dsTwo() {
+        return DruidDataSourceBuilder.create().build();
+    }
+}
+```
+
+```java
+@Configuration
+public class JdbcTemplateConfig {
+    @Bean
+    JdbcTemplate jdbcTemplateOne(@Qualifier("dsOne")DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
+
+    @Bean
+    JdbcTemplate jdbcTemplateTwo(@Qualifier("dsTwo")DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
+}
+```
+
