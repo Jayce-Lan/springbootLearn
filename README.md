@@ -1106,3 +1106,35 @@ public class JdbcTemplateConfig {
 }
 ```
 
+
+
+## springbootRedis
+
+> Spring Boot 整合 Redis
+
+### 整合步骤
+
+#### 导入相关依赖
+
+```xml
+<!-- 不使用Redis默认的lettuce -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+    <exclusions>
+        <exclusion>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+
+<!-- 使用Jedis -->
+<!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+<dependency>
+    <groupId>redis.clients</groupId>
+    <artifactId>jedis</artifactId>
+    <version>3.3.0</version>
+</dependency>
+```
+
