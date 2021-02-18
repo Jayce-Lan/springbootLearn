@@ -1138,3 +1138,9 @@ public class JdbcTemplateConfig {
 </dependency>
 ```
 
+
+
+## springbootCache
+
+> Redis 单机缓存
+
