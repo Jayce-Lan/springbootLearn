@@ -1144,3 +1144,74 @@ public class JdbcTemplateConfig {
 
 > Redis 单机缓存
 
+
+
+## springbootSecurity1
+
+> 项目添加 security 依赖后，整个项目中的资源都会被保护
+
+在访问接口时，默认账户名为 *user* 默认密码会在控制台生成（项目启动时随机生成）
+
+
+
+### 使用配置文件配置用户名以及密码
+
+```properties
+spring.security.user.name=jayce
+spring.security.user.password=root
+#用户角色
+spring.security.user.roles=admin
+```
+
+
+
+### 使用类配置用户名及密码
+
+```java
+package com.example.config;
+
+import ...
+
+@Configuration
+public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .withUser("jayce").password("root").roles("ADMIN", "USER")
+                .and()
+                .withUser("Jom").password("123").roles("USER");
+    }
+}
+```
+
+
+
+### 规定指定用户访问指定域名
+
+```java
+@Override
+protected void configure(HttpSecurity http) throws Exception {
+    http.authorizeRequests()
+        .antMatchers("/admin/**")	//该域名只能被ADMIN访问
+        .hasRole("ADMIN")
+        .antMatchers("/user/**")
+        .access("hasAnyRole('ADMIN', 'USER')")
+        .antMatchers("/db/**")
+        .access("hasRole('ADMIN') and hasRole('DBA')")
+        .anyRequest()
+        .authenticated()
+        .and()
+        .formLogin()
+        .loginProcessingUrl("/login")
+        .permitAll()
+        .and()
+        .csrf()
+        .disable();
+}
+```
+
