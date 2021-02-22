@@ -50,4 +50,6 @@ public interface UserPasswordDOMapper {
      * @mbg.generated Sat Feb 20 12:39:16 CST 2021
      */
     int updateByPrimaryKey(UserPasswordDO record);
+
+    UserPasswordDO selectByUserId(Integer userId);
 }
